@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Totally Normal Website 😇</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* The most awkward font ever created */
+        body {
+            font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Sans', sans-serif;
+            overflow: hidden; /* Prevent scrolling to trap them */
+        }
+
+        /* Chaotic animations */
+        @keyframes rainbow {
+            0% { background-color: #ff0000; }
+            14% { background-color: #ff7f00; }
+            28% { background-color: #ffff00; }
+            42% { background-color: #00ff00; }
+            56% { background-color: #0000ff; }
+            70% { background-color: #4b0082; }
+            84% { background-color: #8b00ff; }
+            100% { background-color: #ff0000; }
+        }
+
+        .party-mode {
+            animation: rainbow 0.5s infinite;
+        }
+
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(3px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+
+        .jumpscare-shake {
+            animation: shake 0.1s infinite;
+        }
+
+        @keyframes spinFast {
+            from { transform: rotate(0deg) scale(1); }
+            to { transform: rotate(360deg) scale(1.5); }
+        }
+
+        .spin-crazy {
+            animation: spinFast 2s infinite linear;
+        }
+
+        /* Floating random text elements */
+        .floater {
+            position: absolute;
+            transition: all 0.3s ease;
+            pointer-events: none;
+            font-weight: bold;
+            font-size: 2rem;
+            text-shadow: 2px 2px 4px #000000;
+            color: white;
+            z-index: 10;
+        }
+
+        marquee {
+            font-size: 3rem;
+            color: yellow;
+            background: red;
+            font-weight: bold;
+            padding: 10px;
+            border: 5px dashed yellow;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 h-screen w-screen flex flex-col items-center justify-center relative select-none">
+
+    <!-- 
+    ========================================================================
+    🛑 INSTRUCTIONS: PUT YOUR AUDIO FILE HERE 🛑
+    Replace "YOUR_FUNNY_AUDIO_FILE.mp3" with the exact name of your audio file.
+    Make sure your audio file is in the SAME FOLDER as this HTML file!
+    ======================================================================== 
+    -->
+    <audio id="funny-bg-audio" loop>
+        <source src="YOUR_FUNNY_AUDIO_FILE.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- INTRO SCREEN (Required to make audio play automatically) -->
+    <div id="intro-screen" class="absolute inset-0 bg-black z-50 flex flex-col items-center justify-center text-center p-4">
+        <h1 class="text-white text-4xl md:text-6xl font-bold mb-8 animate-pulse text-red-500">WARNING</h1>
+        <p class="text-gray-300 text-xl md:text-2xl mb-12 max-w-2xl">
+            This website requires highly advanced computing power. <br>
+            Please verify you are a human by clicking the button below.
+        </p>
+        <button id="start-btn" class="bg-green-500 hover:bg-green-400 text-black font-bold py-6 px-12 rounded-full text-3xl shadow-[0_0_20px_rgba(34,197,94,0.7)] transition-transform hover:scale-110">
+            I AM HUMAN (CLICK ME) 🤖
+        </button>
+    </div>
+
+    <!-- MAIN PRANK CONTENT (Hidden until clicked) -->
+    <div id="main-content" class="hidden w-full h-full flex flex-col justify-between overflow-hidden relative">
+        
+        <marquee behavior="scroll" direction="left" scrollamount="30">
+            🚨 OH NO WHAT HAVE YOU DONE 🚨 THE SYSTEM IS COMPROMISED 🚨 JUST KIDDING LOL 🚨 
+        </marquee>
+
+        <div class="flex-grow flex items-center justify-center relative">
+            <h1 class="text-6xl md:text-9xl font-black text-center spin-crazy mix-blend-difference text-white">
+                HAHAHAHA<br>🤪🤪🤪
+            </h1>
+            
+            <button id="runaway-btn" class="absolute bg-blue-500 text-white font-bold py-4 px-8 rounded-full text-xl hover:bg-blue-600 transition-all duration-200 shadow-xl border-4 border-white">
+                CLICK TO STOP!
+            </button>
+        </div>
+
+        <marquee behavior="alternate" direction="right" scrollamount="50" class="mb-10">
+            👀 I SEE YOU 👀 I SEE YOU 👀 I SEE YOU 👀
+        </marquee>
+
+    </div>
+
+    <!-- 
+    ========================================================================
+    🛑 INSTRUCTIONS: PUT YOUR JUMPSCARE IMAGE HERE 🛑
+    Replace "YOUR_SCREAMING_PICTURE.jpg" with the exact name of your picture.
+    Make sure your image file is in the SAME FOLDER as this HTML file!
+    ======================================================================== 
+    -->
+    <div id="jumpscare-screen" class="hidden absolute inset-0 z-[100] bg-black flex items-center justify-center">
+        <img id="jumpscare-img" src="YOUR_SCREAMING_PICTURE.jpg" alt="JUMPSCARE" class="w-full h-full object-cover jumpscare-shake filter invert-[100%] hue-rotate-180 contrast-200">
+    </div>
+
+    <script>
+        // --- Elements ---
+        const introScreen = document.getElementById('intro-screen');
+        const mainContent = document.getElementById('main-content');
+        const startBtn = document.getElementById('start-btn');
+        const bgAudio = document.getElementById('funny-bg-audio');
+        const jumpscareScreen = document.getElementById('jumpscare-screen');
+        const runawayBtn = document.getElementById('runaway-btn');
+
+        // --- Start the Prank ---
+        startBtn.addEventListener('click', () => {
+            // Hide intro
+            introScreen.classList.add('hidden');
+            
+            // Show main chaos
+            mainContent.classList.remove('hidden');
+            document.body.classList.add('party-mode');
+
+            // Play the funny audio
+            bgAudio.volume = 1.0; 
+            bgAudio.play().catch(e => console.log("Audio play failed. Ensure the file path is correct.", e));
+
+            // Start the jumpscare loop
+            scheduleNextJumpscare();
+            
+            // Start spawning random floating emojis/text
+            setInterval(createFloater, 600);
+        });
+
+        // --- Jumpscare Logic ---
+        function triggerJumpscare() {
+            // Show the terrifying image
+            jumpscareScreen.classList.remove('hidden');
+            
+            // Hide it after a random short time (300ms to 800ms)
+            const scareDuration = Math.floor(Math.random() * 500) + 300;
+            
+            setTimeout(() => {
+                jumpscareScreen.classList.add('hidden');
+                // Schedule the next one!
+                scheduleNextJumpscare();
+            }, scareDuration);
+        }
+
+        function scheduleNextJumpscare() {
+            // Wait between 3 to 7 seconds before the next scare
+            const timeUntilNextScare = Math.floor(Math.random() * 4000) + 3000;
+            setTimeout(triggerJumpscare, timeUntilNextScare);
+        }
+
+        // --- Runaway Button Logic ---
+        runawayBtn.addEventListener('mouseover', () => {
+            const maxX = window.innerWidth - runawayBtn.offsetWidth;
+            const maxY = window.innerHeight - runawayBtn.offsetHeight;
+            
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+            
+            runawayBtn.style.position = 'absolute';
+            runawayBtn.style.left = randomX + 'px';
+            runawayBtn.style.top = randomY + 'px';
+        });
+
+        runawayBtn.addEventListener('click', () => {
+            alert("Nice try! But you're trapped here now! 😂");
+        });
+
+        // --- Floating Random Text Generator ---
+        const funnyPhrases = ["LMAO", "CAUGHT IN 4K", "📸", "🤡", "WHY ARE YOU RUNNING", "AWKWARD...", "💀", "👁️👄👁️", "WHEEZE"];
+        
+        function createFloater() {
+            if (mainContent.classList.contains('hidden')) return;
+
+            const floater = document.createElement('div');
+            floater.classList.add('floater');
+            floater.innerText = funnyPhrases[Math.floor(Math.random() * funnyPhrases.length)];
+            
+            // Random position
+            floater.style.left = Math.random() * 90 + 'vw';
+            floater.style.top = Math.random() * 90 + 'vh';
+            
+            // Random rotation and size
+            const rot = Math.random() * 360;
+            const size = (Math.random() * 2 + 1) + 'rem';
+            floater.style.transform = `rotate(${rot}deg)`;
+            floater.style.fontSize = size;
+
+            // Random color
+            const colors = ['#ff0', '#0ff', '#f0f', '#fff'];
+            floater.style.color = colors[Math.floor(Math.random() * colors.length)];
+
+            mainContent.appendChild(floater);
+
+            // Remove it after a few seconds so the browser doesn't crash
+            setTimeout(() => {
+                floater.remove();
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
